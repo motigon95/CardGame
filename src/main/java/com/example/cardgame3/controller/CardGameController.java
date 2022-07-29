@@ -18,13 +18,13 @@ public class CardGameController {
     CardGameService cardGameService;
 
 
-    @PutMapping("/card")
+    @PutMapping("admin/card")
     public ResponseEntity<?> saveCard(@RequestBody Card card){
         return cardGameService.saveCard(card);
     }
 
 
-    @PutMapping("/cards")
+    @PutMapping("admin/cards")
     public ResponseEntity<?> saveMultipleCards(@RequestBody List<Card> cards){
         return cardGameService.saveMultipleCards(cards);
     }
@@ -54,7 +54,7 @@ public class CardGameController {
 
 
 
-    @GetMapping("/players")
+    @GetMapping("admin/players")
     public ResponseEntity<?> getAllPlayers(){
         return cardGameService.getAllPlayers();
     }

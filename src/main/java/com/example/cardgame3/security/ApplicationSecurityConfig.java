@@ -26,8 +26,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "index", "/api/cards")
-                .permitAll()
+                .antMatchers("/", "index", "/api/cards").permitAll()
+                .antMatchers("/api/admin/**").hasRole(ApplicationUserRole.ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
