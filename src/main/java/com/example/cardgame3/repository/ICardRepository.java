@@ -16,8 +16,8 @@ public interface ICardRepository extends JpaRepository<Card, Integer>, PagingAnd
     @Query("select c from Card c")
     List<Card> getAllCardsSaved();
 
-    @Query("select c from Card c where player_id is null")
-    List<Card> getAvailableCards();
+//    @Query("select c from Card c where player_id is null")
+//    List<Card> getAvailableCards();
 
 
 

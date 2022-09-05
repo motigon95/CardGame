@@ -1,18 +1,20 @@
 package com.example.cardgame3.service;
 
+import com.example.cardgame3.dto.CardDTO;
 import com.example.cardgame3.dto.PlayerDTO;
 import com.example.cardgame3.model.Card;
 
 import com.example.cardgame3.model.Player;
 import com.example.cardgame3.repository.ICardRepository;
 import com.example.cardgame3.repository.IPlayerRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,9 +26,13 @@ public class CardGameService implements ICardService, IPlayerService{
     @Autowired
     IPlayerRepository playerRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
-    public ResponseEntity<?> saveCard(Card card) {
-        cardRepository.save(card);
+    public ResponseEntity<?> saveCard(CardDTO cardDTO) {
+        Card cardToSave = modelMapper.map(cardDTO, new TypeToken<Card>(){}.getType());
+        cardRepository.save(cardToSave);
         return ResponseEntity.ok().build();
     }
 
@@ -38,8 +44,9 @@ public class CardGameService implements ICardService, IPlayerService{
 
 
     @Override
-    public ResponseEntity<?> savePlayer(Player player) {
-        playerRepository.save(player);
+    public ResponseEntity<?> savePlayer(PlayerDTO playerDTO) {
+        Player playerToSave = modelMapper.map(playerDTO, new TypeToken<Player>(){}.getType());
+        playerRepository.save(playerToSave);
         return ResponseEntity.ok().build();
     }
 
@@ -71,11 +78,9 @@ public class CardGameService implements ICardService, IPlayerService{
 
     @Override
     public ResponseEntity<List<Card>> assignRandomDeck(PlayerDTO playerDTO) {
-        // Aca igualo el DTO a un player existente por su nombre
-        List<Player> allPlayers = playerRepository.getAllPlayers();
-        String playerName = playerDTO.getPlayerName();
-        Player filteredPlayer = allPlayers.stream().filter(player1 -> player1.getPlayerName().equals(playerName)).findFirst().get();
-        if(filteredPlayer==null){
+
+        Player filteredPlayer = playerRepository.getPlayerByName(playerDTO.getPlayerName());
+        if(filteredPlayer == null) {
             return new ResponseEntity<>(cardRepository.getAllCardsSaved(), HttpStatus.NOT_FOUND);
         }
 
@@ -89,22 +94,22 @@ public class CardGameService implements ICardService, IPlayerService{
         return new ResponseEntity<>(filteredPlayer.getCardDeck(), HttpStatus.OK);
     }
 
-    public Card assignCard(){
+    private Card assignCard(){
         //IF list esta vacia hacer algo
-        List<Card> availableCards = cardRepository.getAvailableCards();
+        List<Card> allCards = cardRepository.getAllCardsSaved();
         Random rnd = new Random();
 
         //ejemplo de porcentaje
         Integer rarity = rnd.nextInt(100);
         Card cardToAssign;
         if (rarity <= 70){
-            List<Card> commonCards = availableCards.stream().filter(card -> card.getRarity().equals("common")).collect(Collectors.toList());
+            List<Card> commonCards = allCards.stream().filter(card -> card.getRarity().equals("common")).collect(Collectors.toList());
             cardToAssign = commonCards.get(rnd.nextInt(commonCards.size()));
         } else if (rarity <=90) {
-            List<Card> rareCards = availableCards.stream().filter(card -> card.getRarity().equals("rare")).collect(Collectors.toList());
+            List<Card> rareCards = allCards.stream().filter(card -> card.getRarity().equals("rare")).collect(Collectors.toList());
             cardToAssign = rareCards.get(rnd.nextInt(rareCards.size()));
         } else {
-            List<Card> uniqueCards = availableCards.stream().filter(card -> card.getRarity().equals("unique")).collect(Collectors.toList());
+            List<Card> uniqueCards = allCards.stream().filter(card -> card.getRarity().equals("unique")).collect(Collectors.toList());
             cardToAssign = uniqueCards.get(rnd.nextInt(uniqueCards.size()));
         }
         return cardToAssign;

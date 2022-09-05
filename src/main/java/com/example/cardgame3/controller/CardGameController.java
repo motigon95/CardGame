@@ -1,5 +1,6 @@
 package com.example.cardgame3.controller;
 
+import com.example.cardgame3.dto.CardDTO;
 import com.example.cardgame3.dto.PlayerDTO;
 import com.example.cardgame3.model.Card;
 import com.example.cardgame3.model.Player;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api")
 public class CardGameController {
 
@@ -18,13 +20,20 @@ public class CardGameController {
     CardGameService cardGameService;
 
 
-    @PutMapping("admin/card")
-    public ResponseEntity<?> saveCard(@RequestBody Card card){
-        return cardGameService.saveCard(card);
+    @PostMapping("/card")
+    public ResponseEntity<?> saveCard(@RequestBody CardDTO cardDTO){
+        return cardGameService.saveCard(cardDTO);
+
     }
 
 
-    @PutMapping("admin/cards")
+    @PostMapping("/player")
+    public ResponseEntity<?> savePlayer(@RequestBody PlayerDTO playerDTO){
+        return cardGameService.savePlayer(playerDTO);
+    }
+
+
+    @PostMapping("/cards")
     public ResponseEntity<?> saveMultipleCards(@RequestBody List<Card> cards){
         return cardGameService.saveMultipleCards(cards);
     }
@@ -47,10 +56,6 @@ public class CardGameController {
 //        return cardGameService.getCards(cardPage);
 //    }
 
-    @PutMapping("/player")
-    public ResponseEntity<?> loadPlayer(@RequestBody Player player){
-        return cardGameService.savePlayer(player);
-    }
 
 
 

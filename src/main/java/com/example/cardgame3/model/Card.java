@@ -1,8 +1,11 @@
 package com.example.cardgame3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +30,9 @@ public class Card {
 
     @Column(name = "rarity")
     private String rarity;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "cardDeck")
+    private List<Player> playersWhoOwnCard = new ArrayList<>();
 
 
     public Card(String cardName, Integer attackPoints, Integer defensePoints, String rarity) {
@@ -34,5 +40,9 @@ public class Card {
         this.attackPoints = attackPoints;
         this.defensePoints = defensePoints;
         this.rarity = rarity;
+    }
+
+    public void addPlayer(Player player){
+        playersWhoOwnCard.add(player);
     }
 }

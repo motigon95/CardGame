@@ -1,5 +1,6 @@
 package com.example.cardgame3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,10 +9,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
 @Table(name = "PLAYERS")
 public class Player {
 
@@ -26,23 +25,17 @@ public class Player {
     @Column(name = "player_health")
     private Integer playerHealth = 10;
 
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "player_id")
+//    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "player_id")
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "owned_cards",
+            joinColumns = @JoinColumn(name = "player_id"),
+            inverseJoinColumns = @JoinColumn(name = "card_id")
+    )
     private List<Card> cardDeck = new ArrayList<>();
 
-//    @OneToOne
-//    @JoinColumn(name = "card_id", referencedColumnName = "card_id")
-//    private Card card;
-
-
-    public Player(String playerName) {
-        this.playerName = playerName;
-    }
-
-    public Player(String playerName, List<Card> cardDeck) {
-        this.playerName = playerName;
-        this.cardDeck = cardDeck;
-    }
 
     public Card playCard(Integer cardNumber){
         Card cardToPlay = this.getCardDeck().get(cardNumber);
