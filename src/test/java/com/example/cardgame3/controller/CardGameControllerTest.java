@@ -1,5 +1,6 @@
 package com.example.cardgame3.controller;
 
+import com.example.cardgame3.dto.CardDTO;
 import com.example.cardgame3.dto.PlayerDTO;
 import com.example.cardgame3.model.Card;
 import com.example.cardgame3.service.CardGameService;
@@ -56,7 +57,7 @@ public class CardGameControllerTest {
     @Test
     public void shouldSaveCardSuccessfully() {
         //arrange
-        Card card = Card.builder()
+        CardDTO card = CardDTO.builder()
                 .cardName("Lote")
                 .attackPoints(1)
                 .defensePoints(1)
@@ -106,9 +107,7 @@ public class CardGameControllerTest {
     @Test
     public void shouldAssignDeckSuccessfully() {
         //arrange
-        PlayerDTO playerDTO = PlayerDTO.builder()
-                .playerName("Moti")
-                .build();
+        PlayerDTO playerDTO = new PlayerDTO("Moti");
 
         when(cardGameService.assignRandomDeck(playerDTO)).thenReturn(ResponseEntity.ok().build());
 

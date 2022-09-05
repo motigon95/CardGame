@@ -1,5 +1,6 @@
 package com.example.cardgame3.service;
 
+import com.example.cardgame3.dto.CardDTO;
 import com.example.cardgame3.dto.PlayerDTO;
 import com.example.cardgame3.model.Card;
 import com.example.cardgame3.model.Player;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface ICardService {
 
-    ResponseEntity<?> saveCard(Card card);
+    ResponseEntity<?> saveCard(CardDTO cardDTO);
 
     ResponseEntity<?> saveMultipleCards(List<Card> cards);
 
